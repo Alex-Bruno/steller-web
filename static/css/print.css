@@ -1,0 +1,33 @@
+.logo-page {
+    height: 60px;
+    width: 60px;
+}
+
+.content-header {
+    display: block;
+    margin: auto;
+    width: 100%;
+    padding: 5px;
+    /*background-color: rgba(210, 210, 210, 0.5);*/
+}
+
+.header-left {
+    display: inline-block;
+    width: 33%;
+    vertical-align: bottom;
+    text-align: left;
+}
+
+.header-center {
+    display: inline-block;
+    width: 33%;
+    vertical-align: bottom;
+    text-align: center;
+}
+.header-right {
+    display: inline-block;
+    width: 32%;
+    vertical-align: bottom;
+    text-align: right;
+    padding: 5px;
+}

@@ -1,0 +1,45 @@
+{% extends "base/layout.html" %}
+{% load static %}
+{% load bootstrap %}
+{% block title %}Perfil de usuários{% endblock %}
+
+{% block content %}
+<div class="header bg-gradient-primary pb-6 pt-5 pt-md-8"></div>
+
+<!-- Page content -->
+<div class="container-fluid  mt--7">
+    {% include 'base/flash_messages.html' %}
+
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header border-0">
+                    <div class="col-12">
+                        Cadastro de Perfil de usuários
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="col-12">
+                        <form action="" method="POST"> {% csrf_token %}
+                            {{form | bootstrap}}
+                            <div class="alert">
+                                    Mantenha pressionado o "Control", ou "Command" no Mac, para selecionar mais de uma opção.
+                            </div>
+
+                            {% if form.errors %}
+                            <div class="text-danger">
+                                {{form.errors}}
+                            </div>
+                            {% endif %}
+                            
+                            <button class="btn btn-primary btn-block" type="submit">Salvar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

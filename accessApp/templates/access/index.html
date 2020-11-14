@@ -1,0 +1,309 @@
+{% extends "base/layout.html" %}
+{% load static %}
+{% load bootstrap %}
+{% block title %}Acesso de veículos{% endblock %}
+
+{% include "django/forms/widgets/input.html" %}
+
+{% block content %}
+<div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+        <div class="header-body">
+            <!-- Card stats -->
+            <div class="col-12">
+                <div class="card card-stats mb-4 mb-xl-0">
+                    <div class="card-body">
+
+                        {% if 'accessApp.view_access' in user.get_group_permissions %}
+                        <form autocomplete="off" id="form" method="GET"> {% csrf_token %}
+
+                            <div class="row">
+
+                                <div class="col-6 col-md-3">
+                                    <br/>
+                                    {{ form.user | bootstrap }}
+                                </div>
+
+                                <div class="col-6 col-md-3">
+                                    <br/>
+                                    {{ form.plate | bootstrap }}
+                                </div>
+
+                                <div class="col-12 col-md-6">
+                                    <div class="row mr-2 ml-2">
+                                        <div class="col-12 text-center border-bottom">
+                                            <span>Data de entrada do veículo</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="col-6">
+                                            {{ form.start_date | bootstrap }}
+                                        </div>
+                                        <div class="col-6">
+                                            {{ form.start_date_exit | bootstrap }}
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-12 col-md-6">
+                                    <div class="row ml-2 mr-2">
+                                        <div class="col-12 text-center border-bottom">
+                                            <span>Data de saída do veículo</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="col-6">
+                                            {{ form.end_date | bootstrap }}
+                                        </div>
+                                        <div class="col-6">
+                                            {{ form.end_date_exit | bootstrap }}
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-md-6">
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    {{ form.not_exit | bootstrap }}
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <a id="export" title="Exportar" href="{% url 'export_access' %}"
+                                       class="btn btn btn-success float-left mr-2">
+                                        <i class="fas fa-file-excel"></i>
+                                    </a>
+                                    <a id="print" title="PDF" href="{% url 'print_access' %}"
+                                       class="btn btn btn-success float-left">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </a>
+                                </div>
+                                <div class="col-6">
+                                    <input type="hidden" name="page" id="page_input"/>
+                                    <button style="margin-top: 8px;" type="submit" class="btn btn-info float-right">
+                                        Buscar
+                                    </button>
+                                </div>
+                            </div>
+
+                        </form>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+
+    {% include 'base/flash_messages.html' %}
+
+    <!-- Table -->
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header border-0">
+                    <div class="row">
+                        <div class="col-8 align-middle">
+                            {% if object %}
+                            Acessos do veículo {{ object }}
+                            {% else %}
+                            Acessos de veículos
+                            {% endif %}
+                            <span class="badge badge-pill badge-dark">{{ page_obj.paginator.count }}</span>
+                        </div>
+                        {% if 'accessApp.view_access' in user.get_group_permissions %}
+                        <div class="col-4">
+
+                            {% if 'accessApp.add_access' in user.get_group_permissions %}
+                            <a href="{% url 'access_new' %}" class="btn btn btn-primary float-right">
+                                Cadastrar
+                            </a>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <div class="legend row">
+                        <div class="col-12 col-md-3 custom-control-inline">
+                            <div class="square green"></div>&nbsp;
+                            Criado Manualmente
+                        </div>
+                        <div class="col-12 col-md-3 custom-control-inline">
+                            <div class="square blue"></div>&nbsp;
+                            Editado Manualmente
+                        </div>
+                        <div class="col-12 col-md-3 custom-control-inline">
+                            <div class="square lilac"></div>&nbsp;
+                            Criado e editado Manualmente
+                        </div>
+                        <div class="col-12 col-md-2 custom-control-inline">
+                            <div class="square purple"></div>&nbsp;
+                            Automático
+                        </div>
+                    </div>
+                    <table class="table align-items-center table-flush">
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Placa</th>
+                            <th scope="col">Usuário</th>
+                            <th scope="col">Entrada</th>
+                            <th scope="col">Saída</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in object_list %}
+                        <tr>
+                            <td>
+                                {% if item.isCreatedManual and item.isUpdatedManual %}
+                                <div class="square lilac"></div>
+                                {% elif item.isUpdatedManual %}
+                                <div class="square blue"></div>
+                                {% elif item.isCreatedManual %}
+                                <div class="square green"></div>
+                                {% else %}
+                                <div class="square purple"></div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if item.plate %}
+                                {{ item.plate }}
+                                {% else %}
+                                {{ item.vehicle }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if item.vehicle %}
+                                {{ item.vehicle.user.name }}
+                                {% else %}
+                                Não cadastrado
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if item.entrance %}
+                                {{ item.entrance }}
+                                {% else %}
+                                {{ item.created }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if item.exit %}
+                                {{ item.exit }}
+                                {% endif %}
+                            </td>
+                            <td class="text-right">
+                                <div class="dropdown">
+                                    <a class="btn btn-sm btn-icon-only text-light" href="#" role="button"
+                                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                        {% if 'accessApp.change_access' in user.get_group_permissions %}
+                                        <a class="dropdown-item" href="{{ item.get_absolute_url_edit }}">Editar</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card-footer py-4">
+                    {% if is_paginated %}
+                    <nav aria-label="...">
+                        <ul class="pagination justify-content-end mb-0">
+
+                            <li class="page-item">
+                                {% if page_obj.has_previous %}
+                                <a class="page-link"
+                                   onclick="pageSubmit('{{ page_obj.previou_page_number }}')">
+                                    <i class="fas fa-angle-left"></i>
+                                    <span class="sr-only">Voltar</span>
+                                </a>
+                                {% endif %}
+                            </li>
+
+                            {% for i in page_obj.paginator.page_range %}
+                            <li class="page-item {% if i == page_obj.number %} active {% endif %}">
+                                <a class="page-link" onclick="pageSubmit('{{ i }}')">{{ i }}</a>
+                            </li>
+                            {% endfor %}
+
+                            <li class="page-item">
+                                {% if page_obj.has_next %}
+                                <button class="page-link"
+                                        onclick="pageSubmit('{{ page_obj.next_page_number }}')"></a>
+                                    <i class="fas fa-angle-right"></i>
+                                    <span class="sr-only">Proximo</span>
+                                </button>
+                                {% endif %}
+                            </li>
+
+                        </ul>
+                    </nav>
+                    {% endif %}
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    $(document).ready(function () {
+        $('a#export').on('click', function (e) {
+            e.preventDefault();
+            $("#form").attr("action", "{% url 'export_access' %}");
+            $("#form").attr("target", "_blank");
+            $("#form").submit();
+            $("#form").attr("action", "");
+            $("#form").removeAttr('target');
+        });
+
+        $('a#print').on('click', function (e) {
+            e.preventDefault();
+            $("#form").attr("action", "{% url 'print_access' %}");
+            $("#form").attr("target", "_blank");
+            $("#form").submit();
+            $("#form").attr("action", "");
+            $("#form").removeAttr('target');
+        });
+    });
+
+    function pageSubmit(page) {
+        $('#page_input').val(page);
+        $("#form").attr("action", "{% url 'access_index' %}");
+        $("#form").submit();
+        $("#form").attr("action", "");
+        $("#form").removeAttr('target');
+    }
+
+    $('#id_user').select2({
+        width: '100%'
+    });
+    $('.select2-selection.select2-selection--single').addClass('form-control');
+</script>
+{% endblock %}

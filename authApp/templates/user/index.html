@@ -1,0 +1,211 @@
+{% extends "base/layout.html" %}
+{% load static %}
+{% load bootstrap %}
+{% block title %}Usuários{% endblock %}
+
+{% block content %}
+    <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+        <div class="container-fluid">
+            <div class="header-body">
+                <!-- Card stats -->
+                <div class="col-12">
+                    <div class="card card-stats mb-4 mb-xl-0">
+                        <div class="card-body">
+
+                            <form id="form" method="GET"> {% csrf_token %}
+
+                                <div class="row">
+                                    <div class="col-6">
+                                        {{ form.name | bootstrap }}
+                                    </div>
+                                    <div class="col-6">
+                                        {{ form.group | bootstrap }}
+                                    </div>
+
+                                </div>
+ 				<div class="row">
+				    <div class="col-6">
+<a id="export" title="Exportar" href="#"
+                                   class="btn btn btn-success float-left mr-2">
+                                    <i class="fas fa-file-excel"></i>
+                                </a>
+                                <a id="print" title="PDF" href="#"
+                                   class="btn btn btn-success float-left">
+                                    <i class="fas fa-file-pdf"></i>
+                                </a>
+                                    </div>
+				    <div class="col-6">
+                                        <button style="margin-top: 8px;" type="submit" class="btn btn-info float-right">Buscar
+                                        </button>
+                                    </div>
+				</div>
+
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Page content -->
+    <div class="container-fluid  mt--7">
+
+        {% include 'base/flash_messages.html' %}
+
+        <!-- Table -->
+        <div class="row">
+            <div class="col">
+                <div class="card shadow">
+                    <div class="card-header border-0">
+                        <div class="row">
+                            <div class="col-8 align-middle">
+                                Usuários <span class="badge badge-pill badge-dark">{{ page_obj.paginator.count }}</span>
+                            </div>
+
+                            <div class="col-4">
+                                {% if 'authApp.add_user' in user.get_group_permissions %}
+                                    <a href="{% url 'user_new' %}" class="btn btn btn-primary float-right">
+                                        Cadastrar
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Nome</th>
+                                <th scope="col">Veículos</th>
+                                <th scope="col">Data de cadastro</th>
+                                <th scope="col">Grupo</th>
+                                <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for item in object_list %}
+                                <tr>
+                                    <td scope="row">
+                                        <div class="media align-items-center">
+                                            <div class="media-body">
+                                                <span class="mb-0 text-sm">{{ item.get_full_name }}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {% for vehicle in item.vehicles.all %}
+                                            {{ vehicle.plate }}<br/>
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                    <span class="badge badge-dot mr-4">
+                                        {{ item.date_joined }}
+                                    </span>
+                                    </td>
+                                    <td>
+
+                                        {% for group in item.groups.all %}
+                                            {{ group.name }},
+                                        {% endfor %}
+
+                                    </td>
+                                    <td class="text-right">
+                                        <div class="dropdown">
+
+                                            <a class="btn btn-sm btn-icon-only text-light" href="#" role="button"
+                                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-ellipsis-v"></i>
+                                            </a>
+
+                                            {% if 'authApp.change_user' in user.get_group_permissions %}
+                                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                                    <a class="dropdown-item"
+                                                       href="{% url 'user_edit' item.pk %}">Editar</a>
+                                                </div>
+                                            {% endif %}
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card-footer py-4">
+                        {% if is_paginated %}
+                            <nav aria-label="...">
+                                <ul class="pagination justify-content-end mb-0">
+
+                                    <li class="page-item">
+                                        {% if page_obj.has_previous %}
+                                            <a class="page-link"
+                                               onclick="pageSubmit('{{ page_obj.previou_page_number }}')">
+                                                <i class="fas fa-angle-left"></i>
+                                                <span class="sr-only">Voltar</span>
+                                            </a>
+                                        {% endif %}
+                                    </li>
+
+                                    {% for i in page_obj.paginator.page_range %}
+                                        <li class="page-item {% if i == page_obj.number %} active {% endif %}">
+                                            <a class="page-link" onclick="pageSubmit('{{ i }}')">{{ i }}</a>
+                                        </li>
+                                    {% endfor %}
+
+                                    <li class="page-item">
+                                        {% if page_obj.has_next %}
+                                            <button class="page-link"
+                                                    onclick="pageSubmit('{{ page_obj.next_page_number }}')"></a>
+                                                <i class="fas fa-angle-right"></i>
+                                                <span class="sr-only">Proximo</span>
+                                            </button>
+                                        {% endif %}
+                                    </li>
+
+                                </ul>
+                            </nav>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $('a#export').on('click', function (e) {
+            e.preventDefault();
+            $("#form").attr("action", "{% url 'export_users' %}");
+            $("#form").attr("target", "_blank");
+            $("#form").submit();
+            $("#form").attr("action", "");
+            $("#form").removeAttr('target');
+        });
+
+        $('a#print').on('click', function (e) {
+            e.preventDefault();
+            $("#form").attr("action", "{% url 'print_users' %}");
+            $("#form").attr("target", "_blank");
+            $("#form").submit();
+            $("#form").attr("action", "");
+            $("#form").removeAttr('target');
+        });
+
+        function pageSubmit(page) {
+            $('#page_input').val(page);
+            $("#form").attr("action", "{% url 'user_index' %}");
+            $("#form").submit();
+            $("#form").attr("action", "");
+            $("#form").removeAttr('target');
+        }
+    </script>
+{% endblock %}

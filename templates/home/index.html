@@ -1,0 +1,131 @@
+{% extends "base/layout.html" %}
+{% load static %}
+
+
+{% block content %}
+<div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+        <div class="header-body">
+            <!-- Card stats -->
+            <div class="row">
+                <div class="col-12 col-md-4">
+                    <div class="card card-stats mb-4 mb-xl-0">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Usuários</h5>
+                                    <span class="h2 font-weight-bold mb-0">{{ users | length}}</span>
+                                </div>
+                                <div class="col-auto">
+                                    <a href="{% url 'user_index' %}" class="icon icon-shape bg-warning text-white rounded-circle shadow">
+                                        <i class="fas fa-user"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="card card-stats mb-4 mb-xl-0">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Acessos</h5>
+                                    <span class="h2 font-weight-bold mb-0">{{ accesses | length }}</span>
+                                </div>
+                                <div class="col-auto">
+                                    <a href="{% url 'access_today_index' %}" class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                                        <i class="fas fa-chart-bar"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="card card-stats mb-4 mb-xl-0">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Veículos na
+                                        instituição</h5>
+                                    <span class="h2 font-weight-bold mb-0">{{ vehicles | length }}</span>
+                                </div>
+                                <div class="col-auto">
+                                    <a href="{% url 'access_today_index' %}" class="icon icon-shape bg-yellow text-white rounded-circle shadow">
+                                        <i class="fas fa-car"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid  mt--7">
+    <div class="row mt-5">
+        <div class="col-xl-12 mb-5 mb-xl-0">
+            <div class="card shadow">
+                <div class="card-header border-0">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h3 class="mb-0">Ultímos acessos</h3>
+                        </div>
+                        <div class="col text-right">
+                            <a href="{% url 'access_index' %}" class="btn btn-sm btn-primary">Ver todos</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <!-- Projects table -->
+                    <table class="table align-items-center table-flush">
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Placa</th>
+                            <th scope="col">Usuário</th>
+                            <th scope="col">Entrada</th>
+                            <th scope="col">Saída</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in last_accesses %}
+                        <tr>
+                            <td>
+                                {% if item.plate %}
+                                {{ item.plate }}
+                                {% else %}
+                                {{ item.vehicle }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if item.vehicle %}
+                                {{ item.vehicle.user.get_full_name }}
+                                {% else %}
+                                Não cadastrado
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if item.entrance %}
+                                {{ item.entrance }}
+                                {% else %}
+                                {{ item.created }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if item.exit %}
+                                {{ item.exit }}
+                                {% endif %}
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "base/base_print.html" %}
+{% load static %}
+{% block title %}Acessos{% endblock %}
+{% block page_name %}Acessos de veículos{% endblock %}
+
+{% block content %}
+
+
+
+<table class="table table-flush">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">Placa</th>
+            <th scope="col">Usuário</th>
+            <th scope="col">Entrada</th>
+            <th scope="col">Saída</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for item in entities %}
+        <tr>
+            <td scope="col">
+                {% if item.plate %}
+                {{ item.plate }}
+                {% else %}
+                {{ item.vehicle }}
+                {% endif %}
+            </td>
+            <td scope="col">
+                {% if item.vehicle %}
+                {{ item.vehicle.user.name }}
+                {% else %}
+                Não cadastrado
+                {% endif %}
+            </td>
+            <td scope="col">
+                {% if item.entrance %}
+                {{ item.entrance }}
+                {% else %}
+                {{ item.created }}
+                {% endif %}
+            </td>
+            <td scope="col">
+                {% if item.exit %}
+                {{ item.exit }}
+                {% endif %}
+            </td>
+        </tr>
+
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

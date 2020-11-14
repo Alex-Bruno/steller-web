@@ -1,0 +1,44 @@
+#logo {
+    height: 60px;
+    width: 60px;
+}
+
+.content-header {
+    display: block;
+    margin: auto;
+    width: 100%;
+    padding: 5px;
+    /*background-color: rgba(210, 210, 210, 0.5);*/
+    margin-bottom: 10px;
+}
+
+.header-left {
+    display: inline-block;
+    width: 30%;
+    vertical-align: bottom;
+}
+
+.header-center {
+    display: inline-block;
+    width: 39%;
+    vertical-align: bottom;
+    padding: 5px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.title {
+    font-size: 18pt;
+    margin-bottom: 5px;
+}
+
+.title {
+    font-size: 15pt;
+}
+
+.header-right {
+    display: inline-block;
+    width: 30%;
+    vertical-align: bottom;
+    text-align: right;
+}

@@ -1,0 +1,52 @@
+{% extends "base/base_print.html" %}
+{% load static %}
+{% block title %}Usuários{% endblock %}
+{% block page_name %}Usuários{% endblock %}
+
+{% block content %}
+
+<table class="table table-flush">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">Nome</th>
+            <th scope="col">Veículos</th>
+            <th scope="col">Data de cadastro</th>
+            <th scope="col">Grupo</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        {% for item in entities %}
+        <tr>
+            <td scope="row">
+                <div class="media align-items-center">
+                    <div class="media-body">
+                        <span class="mb-0 text-sm">{{ item.get_full_name }}</span>
+                    </div>
+                </div>
+            </td>
+            <td>
+                {% for vehicle in item.vehicles.all %}
+                {{ vehicle.plate }}<br />
+                {% endfor %}
+            </td>
+            <td>
+                <span class="mr-4">
+                    {{ item.date_joined }}
+                </span>
+            </td>
+            <td>
+
+                {% for group in item.groups.all %}
+                {{ group.name}},
+                {% endfor %}
+
+            </td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+
+
+{% endblock %}

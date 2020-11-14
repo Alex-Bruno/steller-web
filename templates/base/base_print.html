@@ -1,0 +1,40 @@
+{% load static %}
+<html>
+
+<head>
+    <title>Print - {% block title %} {% endblock %}</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    {% block stylesheat %}{% endblock stylesheat %}
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="row">
+        <div class="col">
+            <div class="content-header text-left">
+                <div class="header-left">
+                    <img class="logo-page" src="{% static 'img/logo.png' %}"/>
+                </div>
+                <div class="header-center center">
+                    <span class="title">IFNMG- Campus Januária</span><br/>
+                    <span class="legend">{% block page_name %}{% endblock %}</span>
+                </div>
+                <div class="header-right pull-right">
+                    <img class="logo-page" src="{% static 'img/logo-if.png' %}"/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% block content %}{% endblock %}
+
+</div>
+</body>
+
+</html>

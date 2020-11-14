@@ -1,0 +1,37 @@
+{% extends "base/base_print.html" %}
+{% load static %}
+{% block title %}Veículos{% endblock %}
+{% block page_name %}Veículos{% endblock %}
+
+{% block content %}
+
+<table class="table align-items-center table-flush">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">Placa</th>
+            <th scope="col">Dono</th>
+            <th scope="col">Descrição</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in entities %}
+        <tr>
+            <td scope="row">
+                <div class="media align-items-center">
+                    <div class="media-body">
+                        <span class="mb-0 text-sm">{{ item.plate }}</span>
+                    </div>
+                </div>
+            </td>
+            <td>
+                {{ item.user }}
+            </td>
+            <td>
+                {{ item.description }}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends "base/layout.html" %}
+{% load static %}
+{% block title %}Perfil de usuários{% endblock %}
+
+{% block content %}
+<div class="header bg-gradient-primary pb-6 pt-5 pt-md-8"></div>
+
+<!-- Page content -->
+<div class="container-fluid  mt--7">
+    <!-- Table -->
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header border-0">
+                    <div class="row">
+                        <div class="col-8 align-middle">
+                            Perfil de usuários <span class="badge badge-pill badge-dark">{{ object_list | length }}</span>
+                        </div>
+                        <div class="col-4">
+                            <a href="{% url 'group_new' %}" class="btn btn btn-primary float-right">
+                                Cadastrar
+                            </a>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="table-responsive">
+                    {% if object_list %}
+                    <table class="table align-items-center table-flush">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Nome</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {% for item in object_list %}
+                            <tr>
+                                <td scope="row">
+                                    <div class="media align-items-center">
+                                        <div class="media-body">
+                                            <span class="mb-0 text-sm">{{ item.name }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-right">
+                                    <div class="dropdown">
+                                        <a class="btn btn-sm btn-icon-only text-light" href="#" role="button"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                            
+                                            {% if 'auth.change_group' in user.get_group_permissions %}
+                                            <a class="dropdown-item" href="{% url 'group_edit' item.pk %}">Editar</a>
+                                            {% endif %}
+
+                                            {% if 'auth.delete_group' in user.get_group_permissions %}
+                                            <a class="dropdown-item" href="{% url 'group_delete' item.pk %}">Deletar</a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <div class="card-header border-0">
+                        Nenhum perfil cadastrado
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer py-4">
+                    {% if is_paginated %}
+                    <nav aria-label="...">
+                        <ul class="pagination justify-content-end mb-0">
+                            
+                            <li class="page-item">
+                                {% if page_obj.has_previous %}
+                                <a class="page-link" href="?page={{ page_obj.previou_page_number }}">
+                                        <i class="fas fa-angle-left"></i>
+                                        <span class="sr-only">Voltar</span>
+                                    </a>
+                                {% endif %}
+                            </li>
+
+                            {% for i in page_obj.paginator.page_range %}
+                            <li class="page-item {% if i == page_obj.number %} active {% endif %}">
+                                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                            </li>
+                            {% endfor %}
+
+                            <li class="page-item">
+                                {% if page_obj.has_next %}
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                                    <i class="fas fa-angle-right"></i>
+                                    <span class="sr-only">Proximo</span>
+                                </a>
+                                {% endif %}
+                            </li>
+
+                        </ul>
+                    </nav>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

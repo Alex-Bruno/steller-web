@@ -1,0 +1,101 @@
+{% extends "base/layout.html" %}
+{% load static %}
+{% load bootstrap %}
+{% block title %}Acessos de veículos{% endblock %}
+
+{% block content %}
+    <div class="header bg-gradient-primary pb-6 pt-5 pt-md-8"></div>
+
+    <!-- Page content -->
+    <div class="container-fluid  mt--7">
+        {% include 'base/flash_messages.html' %}
+
+        <div class="row">
+            <div class="col">
+                <div class="card shadow">
+                    <div class="card-header border-0">
+                        <div class="col-12">
+                            Cadastro de Acessos
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="col-12">
+                            <form action="" method="POST"> {% csrf_token %}
+
+                                <div class="form-group">
+                                    <label>Tipo de entrada</label>
+                                    <div class="control">
+                                        <label class="radio">
+                                            <input type="radio" name="select-type-vehicle" value="PLATE">
+                                            Placa
+                                        </label>
+                                        <label class="radio">
+                                            <input type="radio" name="select-type-vehicle" value="VEHICLE">
+                                            Veículo
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="plate-group d-none">
+                                    {{ form.plate | bootstrap }}
+                                </div>
+
+                                <div class="vehicle-group d-none">
+                                    {{ form.vehicle | bootstrap }}
+                                </div>
+
+                                <div class="entrance-group">
+                                    {{ form.entrance | bootstrap }}
+                                </div>
+
+                                {% if form.errors %}
+                                    <div class="text-danger">
+                                        {{ form.errors }}
+                                    </div>
+                                {% endif %}
+
+                                <button class="btn btn-primary btn-block" type="submit">Salvar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $('#id_entrance').mask("99:99:99");
+        $('#id_plate').mask("AAA-9999");
+
+        $('#id_vehicle').select2({
+            width: '100%'
+        });
+
+        if ($('#id_vehicle').val()) {
+            $('.vehicle-group').removeClass('d-none');
+            $('.plate-group').addClass('d-none');
+            $('#id_plate').val(null);
+        } else if ($('#id_plate').val()) {
+            $('.plate-group').removeClass('d-none');
+            $('.vehicle-group').addClass('d-none');
+            $('#id_vehicle').val('');
+        }
+
+        $("input[name='select-type-vehicle']").on('change', function () {
+            const value = $(this).val();
+            if (value === 'PLATE') {
+                $('.plate-group').removeClass('d-none');
+                $('.vehicle-group').addClass('d-none');
+                $('#id_vehicle').val('');
+            } else {
+                $('.vehicle-group').removeClass('d-none');
+                $('.plate-group').addClass('d-none');
+                $('#id_plate').val(null);
+            }
+        });
+    </script>
+{% endblock %}

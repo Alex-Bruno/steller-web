@@ -1,0 +1,42 @@
+{% load static %}
+{% with version="1.1" %}
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Steller - {% block title %} {% endblock title %}</title>
+    {% include 'base/css.html' %}
+    {% block stylesheat %}{% endblock stylesheat %}
+</head>
+
+<body>
+{% block navbar %}{% endblock navbar %}
+
+{% block body %}
+
+    {% block content %}{% endblock content %}
+
+    {% block license %}
+        <footer class="footer fixed-bottom license-info d-none d-md-inline-block">
+            <div class="row align-items-end">
+                <div class="col-12">
+                    <div class="container-fluid">
+                        <div class="copyright text-center text-xl-left text-muted">
+                            © 2020 <a href="https://www.creative-tim.com" class="font-weight-bold ml-1" target="_blank">Creative
+                            Tim</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    {% endblock license %}
+{% endblock body %}
+{% include 'base/js.html' %}
+{% block javascript %}{% endblock javascript %}
+</body>
+
+</html>
+{% endwith %}

@@ -1,0 +1,49 @@
+.footer {
+    background: transparent !important;
+}
+
+.license-info {
+    max-width: 250px;
+    width: 100%;
+}
+
+.legend {
+    font-size: 10pt;
+    padding: 8px;
+    background: #F6F9FC;
+
+}
+.square {
+    width: 20px;
+    height: 20px;
+    border-radius: 10%;
+}
+
+.green {
+    background: #60FF65;
+}
+
+.lilac {
+    background: #87B1FF;
+}
+
+.blue {
+    background: #6FE8D8;
+}
+
+.purple {
+    background: #A46FE8;
+}
+
+.select2-container .select2-selection--single {
+    height: auto !important;
+}
+
+.select2-container--default .select2-selection--single {
+    border: 1px solid #cad1d7 !important;
+}
+
+.select2-selection__rendered {
+    color: #8898aa !important;
+    line-height: 1.5 !important;
+}
